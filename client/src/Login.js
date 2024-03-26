@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./index.css";
 export default function Login() {
   function generateRandomString(length) {
     var result = "";
@@ -26,7 +26,7 @@ export default function Login() {
 
   return (
     <div>
-      <a className="btn btn-success btn-lg" href={url}>
+      <a href={url} className="text-light">
         Login With Spotify
       </a>
     </div>

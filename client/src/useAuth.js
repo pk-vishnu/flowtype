@@ -19,10 +19,9 @@ export default function useAuth(code) {
       })
       .catch((err) => {
         console.log(err);
-        window.location = "/";
+        // window.location = "/";
       });
     console.log(code);
-    localStorage.setItem("accessToken", res.data.accessToken);
   }, [code]);
 
   useEffect(() => {
@@ -43,6 +42,6 @@ export default function useAuth(code) {
 
     return () => clearInterval(interval);
   }, [refreshToken, expiresIn]);
-
+  sessionStorage.setItem("accessToken", accessToken);
   return accessToken;
 }

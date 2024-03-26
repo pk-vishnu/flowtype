@@ -37,7 +37,6 @@ app.post("/login", function (req, res) {
     })
     .then((response) => {
       data = response.data;
-      console.log(data);
       res.json({
         accessToken: data.access_token,
         refreshToken: data.refresh_token,

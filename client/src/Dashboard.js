@@ -2,22 +2,20 @@ import { useState, useEffect } from "react";
 import Player from "./Player";
 import TrackSearchResult from "./TrackSearchResult";
 import SpotifyWebApi from "spotify-web-api-node";
-
+import "./index.css";
+import useAuth from "./useAuth";
 const spotifyApi = new SpotifyWebApi({
   clientId: "d58f21118f8a4feba43aa28970a5ab11",
 });
-
-export default function Dashboard() {
-  const accessToken = localStorage.getItem("accessToken");
+export default function Dashboard({ code }) {
+  const accessToken = useAuth(code);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
-  const [lyrics, setLyrics] = useState("");
 
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch("");
-    setLyrics("");
   }
 
   useEffect(() => {
@@ -56,30 +54,29 @@ export default function Dashboard() {
   }, [search, accessToken]);
 
   return (
-    <div className="form" style={{ height: "100vh" }}>
-      <input
-        type="search"
-        placeholder="Search Songs/Artists"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
-        {searchResults.map((track) => (
-          <TrackSearchResult
-            track={track}
-            key={track.uri}
-            chooseTrack={chooseTrack}
-          />
-        ))}
-        {searchResults.length === 0 && (
-          <div className="text-center" style={{ whiteSpace: "pre" }}>
-            {lyrics}
-          </div>
-        )}
+    <>
+      <h1 className="text-xl text-light ">Dev version</h1>
+      <div className="m-0 p-0">
+        <input
+          type="search"
+          className=""
+          placeholder="Search Songs/Artists"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+          {searchResults.map((track) => (
+            <TrackSearchResult
+              track={track}
+              key={track.uri}
+              chooseTrack={chooseTrack}
+            />
+          ))}
+        </div>
+        <div className="absolute bottom-0 w-full bg-gray-300 py-0 text-center">
+          <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+        </div>
       </div>
-      <div>
-        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-      </div>
-    </div>
+    </>
   );
 }
