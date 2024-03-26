@@ -1,7 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function useAuth() {
   const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    const getAccessTokenFromURL = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("access_token");
+      if (token) {
+        setAccessToken(token);
+        sessionStorage.setItem("accessToken", token);
+        window.location.href = "http://localhost:3000/dashboard";
+      }
+    };
+    getAccessTokenFromURL();
+  }, []);
 
   function generateRandomString(length) {
     var result = "";
@@ -13,6 +26,7 @@ export default function useAuth() {
     }
     return result;
   }
+
   const login = async () => {
     try {
       var state = generateRandomString(16);
@@ -29,10 +43,6 @@ export default function useAuth() {
       const url = "https://accounts.spotify.com/authorize?" + queryString;
 
       window.location.href = url;
-
-      const urlParams = new URLSearchParams(window.location.search);
-      setAccessToken(urlParams.get("access_token"));
-      sessionStorage.setItem("accessToken", accessToken);
     } catch (error) {
       console.error("Error during login:", error);
     }
