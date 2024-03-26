@@ -14,33 +14,6 @@ const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = "http://localhost:3001/callback";
 
-function generateRandomString(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
-app.get("/login", function (req, res) {
-  var state = generateRandomString(16);
-  var scope = "user-read-private user-read-email streaming";
-
-  res.redirect(
-    "https://accounts.spotify.com/authorize?" +
-      querystring.stringify({
-        response_type: "code",
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: redirect_uri,
-        state: state,
-      })
-  );
-});
-
 app.get("/callback", function (req, res) {
   var code = req.query.code || null;
   var state = req.query.state || null;
@@ -68,14 +41,20 @@ app.get("/callback", function (req, res) {
       },
       json: true,
     };
-
     axios
       .post(authOptions.url, querystring.stringify(authOptions.form), {
         headers: authOptions.headers,
       })
       .then((response) => {
-        res.send({ accessToken: response.data.access_token });
-        redirec = response.data.access_token;
+        data = response.data;
+        res.redirect(
+          "http://localhost:3000?" +
+            querystring.stringify({
+              access_token: data.access_token,
+              refresh_token: data.refresh_token,
+              expires_in: data.expires_in,
+            })
+        );
       })
       .catch((error) => {
         console.error("Error exchanging code for access token:", error);
