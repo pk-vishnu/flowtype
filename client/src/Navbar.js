@@ -6,17 +6,15 @@ export default function Navbar() {
     <>
       <header className="text-gray-400body-font">
         <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-          <img src="./logo.png" className="size-14 mt-2" alt="Flowtype logo" />
+          <img src="./logo.png" className="size-20 mt-2" alt="Flowtype logo" />
           <a
             className="flex title-font font-medium items-center text-light mb-4 md:mb-0"
             href="/"
           >
-            <span className="ml-3 text-xl">Flowtype</span>
+            <span className="ml-3 text-2xl">Flowtype</span>
           </a>
           <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-            <a className="mr-5 text-light hover:text-white" href="/">
-              L1
-            </a>
+            <a className="mr-5 text-light hover:text-white" href="/"></a>
           </nav>
           {code ? (
             <button className="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0 text-light">

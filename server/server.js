@@ -44,7 +44,7 @@ app.post("/login", function (req, res) {
       });
     })
     .catch((error) => {
-      console.error("Error exchanging code for access token:", error);
+      // console.error("Error exchanging code for access token:", error);
       res.status(500).send("Internal Server Error");
     });
 });

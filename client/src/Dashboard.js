@@ -55,27 +55,30 @@ export default function Dashboard({ code }) {
 
   return (
     <>
-      <h1 className="text-xl text-light ">Dev version</h1>
-      <div className="m-0 p-0">
-        <input
-          type="search"
-          className=""
-          placeholder="Search Songs/Artists"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
-          {searchResults.map((track) => (
-            <TrackSearchResult
-              track={track}
-              key={track.uri}
-              chooseTrack={chooseTrack}
-            />
-          ))}
+      <div className="lg: mx-40 sm:mx-10 md:mx-20">
+        <h1 className="text-xl text-light mb-5">Track List</h1>
+        <div className="m-0 p-0">
+          <input
+            type="search"
+            className="w-full bg-gray-700 text-light placeholder-silver border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
+            placeholder="Search Songs/Artists"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <div className="overflow-y-auto max-h-[400px]">
+            {searchResults.map((track) => (
+              <TrackSearchResult
+                track={track}
+                key={track.uri}
+                chooseTrack={chooseTrack}
+              />
+            ))}
+          </div>
         </div>
-        <div className="absolute bottom-0 w-full bg-gray-300 py-0 text-center">
-          <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-        </div>
+      </div>
+      <div className="absolute bottom-0 w-full bg-gray-300 py-0 text-center">
+        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
       </div>
     </>
   );
