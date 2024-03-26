@@ -12,10 +12,11 @@ app.use(cors());
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = "http://localhost:3000";
+const redirect_uri = process.env.REDIRECT_URI;
 
 app.post("/login", function (req, res) {
   var code = req.body.code || null;
+
   var authOptions = {
     url: "https://accounts.spotify.com/api/token",
     form: {
@@ -37,6 +38,7 @@ app.post("/login", function (req, res) {
     })
     .then((response) => {
       data = response.data;
+      console.log(data);
       res.json({
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
@@ -44,7 +46,7 @@ app.post("/login", function (req, res) {
       });
     })
     .catch((error) => {
-      // console.error("Error exchanging code for access token:", error);
+      console.error("Error exchanging code for access token:", error);
       res.status(500).send("Internal Server Error");
     });
 });

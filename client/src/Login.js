@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.css";
 
 export default function Login() {
@@ -13,13 +13,13 @@ export default function Login() {
     return result;
   }
   var state = generateRandomString(16);
+  sessionStorage.setItem("state", state);
   var scope = "user-read-private user-read-email streaming";
   const params = new URLSearchParams({
     response_type: "code",
     client_id: "d58f21118f8a4feba43aa28970a5ab11",
     scope: scope,
-    redirect_uri: "http://localhost:3000",
-    state: state,
+    redirect_uri: "http://localhost:3000/",
   });
 
   const queryString = params.toString();

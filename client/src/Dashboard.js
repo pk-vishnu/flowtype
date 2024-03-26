@@ -60,7 +60,7 @@ export default function Dashboard({ code }) {
         <div className="m-0 p-0">
           <input
             type="search"
-            className="w-full bg-gray-700 text-light placeholder-silver border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
+            className="w-full bg-dark text-light placeholder-silver border border-green-400 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
             placeholder="Search Songs/Artists"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

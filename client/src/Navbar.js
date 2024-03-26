@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <>
       <header className="text-gray-400body-font">
-        <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+        <div className="container mx-auto flex flex-wrap p-0 flex-col md:flex-row items-center">
           <img src="./logo.png" className="size-20 mt-2" alt="Flowtype logo" />
           <a
             className="flex title-font font-medium items-center text-light mb-4 md:mb-0"

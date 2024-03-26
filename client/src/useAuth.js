@@ -5,17 +5,19 @@ export default function useAuth(code) {
   const [accessToken, setAccessToken] = useState();
   const [refreshToken, setRefreshToken] = useState();
   const [expiresIn, setExpiresIn] = useState();
-
+  var state = sessionStorage.getItem("state");
   useEffect(() => {
     axios
       .post("http://localhost:3001/login", {
         code,
+        state,
       })
       .then((res) => {
         setAccessToken(res.data.accessToken);
         setRefreshToken(res.data.refreshToken);
         setExpiresIn(res.data.expiresIn);
         window.history.pushState({}, null, "/");
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -34,8 +36,10 @@ export default function useAuth(code) {
         .then((res) => {
           setAccessToken(res.data.accessToken);
           setExpiresIn(res.data.expiresIn);
+          console.log(res.data);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           window.location = "/";
         });
     }, (expiresIn - 60) * 1000);
