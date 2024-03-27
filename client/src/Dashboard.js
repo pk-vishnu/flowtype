@@ -12,12 +12,13 @@ export default function Dashboard({ code }) {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
+  const [title, setTitle] = useState();
 
   function chooseTrack(track) {
     setPlayingTrack(track);
+    setTitle(track.title);
     setSearch("");
   }
-
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
@@ -56,7 +57,11 @@ export default function Dashboard({ code }) {
   return (
     <>
       <div className="lg: mx-40 sm:mx-10 md:mx-20">
-        <h1 className="text-xl text-light mb-5">Track List</h1>
+        <center>
+          <h1 className="text-md text-light mb-5 font-poppins">
+            Selected - {title}
+          </h1>
+        </center>
         <div className="m-0 p-0">
           <input
             type="search"

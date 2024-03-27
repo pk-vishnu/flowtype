@@ -11,7 +11,7 @@ export default function Navbar() {
             className="flex title-font font-medium items-center text-light mb-4 md:mb-0"
             href="/"
           >
-            <span className="ml-3 text-2xl">Flowtype</span>
+            <span className="ml-3 text-2xl font-poppins">Flowtype</span>
           </a>
           <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
             <a className="mr-5 text-light hover:text-white" href="/"></a>
