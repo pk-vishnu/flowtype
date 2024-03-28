@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ["Poppins"],
+        roboto: ["Roboto Mono"],
       },
       colors: {
         dark: "#131314",
@@ -13,6 +14,7 @@ module.exports = {
         primary: "#ab7aff",
         secondary: "#edab74",
         altdark: "#210102",
+        green1: "#7ecb75",
       },
     },
   },

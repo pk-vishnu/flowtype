@@ -3,22 +3,83 @@ import Player from "./Player";
 import TrackSearchResult from "./TrackSearchResult";
 import SpotifyWebApi from "spotify-web-api-node";
 import "./index.css";
+import axios from "axios";
 import useAuth from "./useAuth";
+
 const spotifyApi = new SpotifyWebApi({
   clientId: "d58f21118f8a4feba43aa28970a5ab11",
 });
+
 export default function Dashboard({ code }) {
   const accessToken = useAuth(code);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [playingTrack, setPlayingTrack] = useState();
-  const [title, setTitle] = useState();
+  const [playingTrack, setPlayingTrack] = useState(null);
+  const [title, setTitle] = useState("");
+  const [lyrics, setLyrics] = useState([]);
+  const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
+  const [progressMs, setProgressMs] = useState(0);
 
+  useEffect(() => {
+    if (!playingTrack) return;
+    axios
+      .get("http://localhost:3001/lyrics", {
+        params: {
+          track: playingTrack.title,
+          artist: playingTrack.artist,
+        },
+      })
+      .then((res) => {
+        setLyrics(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [playingTrack]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    const intervalId = setInterval(() => {
+      fetch("https://api.spotify.com/v1/me/player", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.is_playing && data.progress_ms !== undefined) {
+            setProgressMs(data.progress_ms);
+          }
+        })
+        .catch((error) => {});
+    }, 200);
+
+    return () => clearInterval(intervalId);
+  }, [accessToken]);
+
+  useEffect(() => {
+    let index = 0;
+    while (
+      index < lyrics.length &&
+      lyrics[index].seconds * 1000 <= progressMs
+    ) {
+      index++;
+    }
+    // Set the current lyric index
+    setCurrentLyricIndex(index - 1);
+  }, [lyrics, progressMs]);
   function chooseTrack(track) {
     setPlayingTrack(track);
     setTitle(track.title);
     setSearch("");
   }
+
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
@@ -79,6 +140,13 @@ export default function Dashboard({ code }) {
                 chooseTrack={chooseTrack}
               />
             ))}
+            {playingTrack && (
+              <div className="lg:p-40 text-light text-4xl text-center font-roboto">
+                {lyrics[currentLyricIndex]?.lyrics}
+                <br></br>
+                <useSpotifyPlayerProgress />
+              </div>
+            )}
           </div>
         </div>
       </div>

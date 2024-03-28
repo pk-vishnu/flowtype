@@ -14,7 +14,8 @@ export default function Login() {
   }
   var state = generateRandomString(16);
   sessionStorage.setItem("state", state);
-  var scope = "user-read-private user-read-email streaming";
+  var scope =
+    "user-read-private user-read-email streaming user-read-playback-state";
   const params = new URLSearchParams({
     response_type: "code",
     client_id: "d58f21118f8a4feba43aa28970a5ab11",
