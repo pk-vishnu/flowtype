@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import Player from "./Player";
 import TrackSearchResult from "./TrackSearchResult";
 import SpotifyWebApi from "spotify-web-api-node";
@@ -23,6 +24,15 @@ export default function Dashboard({ code }) {
   const [userInput, setUserInput] = useState([]);
   const [currentLine, setCurrentLine] = useState([]);
   const [activeWordIndex, setActiveWordIndex] = useState(0);
+  const [correctWordArray, setCorrectWordArray] = useState([]);
+
+  //Set Access Token
+  useEffect(() => {
+    if (!accessToken) return;
+    spotifyApi.setAccessToken(accessToken);
+  }, [accessToken]);
+
+  //Lyrics handling
   useEffect(() => {
     if (!playingTrack) return;
     axios
@@ -45,7 +55,9 @@ export default function Dashboard({ code }) {
       setLyrics([]);
     }
   }, [playstate]);
+  //End of Lyrics Handling
 
+  //Spotify API handling
   useEffect(() => {
     if (!accessToken) return;
 
@@ -75,6 +87,7 @@ export default function Dashboard({ code }) {
     return () => clearInterval(intervalId);
   }, [accessToken]);
 
+  //Current Lyric Line Handling
   useEffect(() => {
     let index = 0;
     while (
@@ -83,20 +96,16 @@ export default function Dashboard({ code }) {
     ) {
       index++;
     }
-    // Set the current lyric index
     setCurrentLyricIndex(index - 1);
   }, [lyrics, progressMs]);
+
   function chooseTrack(track) {
     setPlayingTrack(track);
     setTitle(track.title);
     setSearch("");
   }
 
-  useEffect(() => {
-    if (!accessToken) return;
-    spotifyApi.setAccessToken(accessToken);
-  }, [accessToken]);
-
+  //Search Track Handling
   useEffect(() => {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
@@ -127,14 +136,23 @@ export default function Dashboard({ code }) {
     return () => (cancel = true);
   }, [search, accessToken]);
 
+  //Lyric Line Handling
   useEffect(() => {
     setCurrentLine(lyrics[currentLyricIndex]?.lyrics.split(" "));
   }, [currentLyricIndex]);
 
+  //User Input Handling
   function processInput(value) {
     if (value.endsWith(" ")) {
-      setActiveWordIndex((index) => index + 1);
-      setUserInput("");
+      if (value.trim() === currentLine[activeWordIndex]) {
+        setCorrectWordArray((array) => [...array, true]);
+        setActiveWordIndex((index) => index + 1);
+        setUserInput("");
+      } else {
+        setCorrectWordArray((array) => [...array, false]);
+        setActiveWordIndex((index) => index + 1);
+        setUserInput("");
+      }
     } else {
       setUserInput(value);
     }
@@ -142,6 +160,34 @@ export default function Dashboard({ code }) {
 
   useEffect(() => {
     setActiveWordIndex(0);
+    setUserInput("");
+  }, [currentLyricIndex]);
+
+  useEffect(() => {
+    console.log(correctWordArray);
+  }, [correctWordArray]);
+
+  function Word(props) {
+    const { text, active, correct } = props;
+
+    if (correct === true) {
+      return <span className="text-green-400">{text + " "}</span>;
+    } else if (correct === false) {
+      return <span className="text-red-500">{text + " "}</span>;
+    } else if (active === true) {
+      return (
+        <span className="text-light bg-slate-700 rounded-md">{text + " "}</span>
+      );
+    } else {
+      return <span> {text + " "}</span>;
+    }
+  }
+
+  Word = React.memo(Word);
+
+  //Reset Correct Word Array when line changes
+  useEffect(() => {
+    setCorrectWordArray([]);
     setUserInput("");
   }, [currentLyricIndex]);
 
@@ -177,24 +223,28 @@ export default function Dashboard({ code }) {
               />
             ))}
             {playstate && (
-              <div className="lg:p-40 text-light text-4xl text-center font-roboto">
+              <div className="lg:pt-38 md:pt-40 text-light text-4xl text-center font-roboto">
                 {lyrics?.length === 0 && "No lyrics found"}
                 <p>
                   {currentLine &&
                     currentLine.map((word, index) => {
-                      if (index === activeWordIndex) {
-                        return <span className="text-green-400">{word} </span>;
-                      }
-                      return <span>{word} </span>;
+                      return (
+                        <Word
+                          text={word}
+                          active={index === activeWordIndex}
+                          correct={correctWordArray[index]}
+                        />
+                      );
                     })}
                 </p>
                 <br></br>
                 <input
+                  className="content-center bg-dark text-light placeholder-silver rounded-md focus:outline-none text-sm lg:pt-20 md:pt-10 px-2 py-2 w-1/2 text-center"
                   type="text"
                   value={userInput}
+                  placeholder="Type Here"
                   onChange={(e) => processInput(e.target.value)}
                 />
-                <p>{userInput}</p>
               </div>
             )}
           </div>

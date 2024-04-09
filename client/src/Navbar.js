@@ -6,12 +6,8 @@ export default function Navbar() {
   return (
     <>
       <header className="text-gray-400 body-font">
-        <div className="container mx-auto flex flex-wrap p-0 flex-col md:flex-row items-center py-3">
-          <img
-            src="./logo.png"
-            className="size-16 mt-2 animate-pulse"
-            alt="Flowtype logo"
-          />
+        <div className="container flex flex-wrap p-0 flex-col md:flex-row items-center py-3 lg:mx-10 md:mx-15">
+          <img src="./logo.png" className="size-16 mt-2" alt="Flowtype logo" />
           <a
             className="flex title-font font-medium items-center text-light mb-4 md:mb-0"
             href="/"
@@ -23,8 +19,8 @@ export default function Navbar() {
           </nav>
           {accessToken ? (
             <a href="/">
-              <button className="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0 text-light">
-                Logout
+              <button className="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0 text-light ">
+                Play
                 <svg
                   fill="none"
                   stroke="currentColor"
