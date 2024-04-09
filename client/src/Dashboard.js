@@ -19,7 +19,7 @@ export default function Dashboard({ code }) {
   const [lyrics, setLyrics] = useState([]);
   const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
   const [progressMs, setProgressMs] = useState(0);
-
+  const [playstate, setPlaystate] = useState(false);
   useEffect(() => {
     if (!playingTrack) return;
     axios
@@ -56,8 +56,11 @@ export default function Dashboard({ code }) {
           if (data.is_playing && data.progress_ms !== undefined) {
             setProgressMs(data.progress_ms);
           }
+          setPlaystate(data.is_playing);
         })
-        .catch((error) => {});
+        .catch((error) => {
+          console.log(error);
+        });
     }, 200);
 
     return () => clearInterval(intervalId);
@@ -119,18 +122,24 @@ export default function Dashboard({ code }) {
     <>
       <div className="lg: mx-40 sm:mx-10 md:mx-20">
         <center>
-          <h1 className="text-md text-light mb-5 font-poppins">
-            Selected - {title}
-          </h1>
+          {playstate ? (
+            <h1 className="text-md text-light mb-5 font-poppins">
+              Now Playing - {title}
+            </h1>
+          ) : (
+            <h1 className="text-md text-light mb-5 font-poppins">Press Play</h1>
+          )}
         </center>
         <div className="m-0 p-0">
-          <input
-            type="search"
-            className="w-full bg-dark text-light placeholder-silver border border-green-400 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
-            placeholder="Search Songs/Artists"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          {!playstate && (
+            <input
+              type="search"
+              className="w-full bg-dark text-light placeholder-silver border border-green-400 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
+              placeholder="Search Songs/Artists"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          )}
 
           <div className="overflow-y-auto max-h-[400px]">
             {searchResults.map((track) => (
@@ -144,7 +153,7 @@ export default function Dashboard({ code }) {
               <div className="lg:p-40 text-light text-4xl text-center font-roboto">
                 {lyrics[currentLyricIndex]?.lyrics}
                 <br></br>
-                <useSpotifyPlayerProgress />
+                {playstate}
               </div>
             )}
           </div>
