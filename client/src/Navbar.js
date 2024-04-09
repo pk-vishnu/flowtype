@@ -5,8 +5,8 @@ export default function Navbar() {
   const code = new URLSearchParams(window.location.search).get("code");
   return (
     <>
-      <header className="text-gray-400 body-font">
-        <div className="container flex flex-wrap p-0 flex-col md:flex-row items-center py-3 lg:mx-10 md:mx-15">
+      <header className="text-gray-400 body-font w-full">
+        <div className="container flex flex-wrap p-0 flex-col md:flex-row items-center py-3 lg:mx-7 md:mx-15 ">
           <img src="./logo.png" className="size-16 mt-2" alt="Flowtype logo" />
           <a
             className="flex title-font font-medium items-center text-light mb-4 md:mb-0"

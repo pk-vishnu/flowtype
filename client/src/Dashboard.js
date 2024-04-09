@@ -223,7 +223,7 @@ export default function Dashboard({ code }) {
               />
             ))}
             {playstate && (
-              <div className="lg:pt-38 md:pt-40 text-light text-4xl text-center font-roboto">
+              <div className="lg:pt-40 md:pt-40 text-light text-4xl text-center font-roboto">
                 {lyrics?.length === 0 && "No lyrics found"}
                 <p>
                   {currentLine &&
