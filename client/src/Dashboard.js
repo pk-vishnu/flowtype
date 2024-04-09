@@ -20,6 +20,9 @@ export default function Dashboard({ code }) {
   const [currentLyricIndex, setCurrentLyricIndex] = useState(0);
   const [progressMs, setProgressMs] = useState(0);
   const [playstate, setPlaystate] = useState(false);
+  const [userInput, setUserInput] = useState([]);
+  const [currentLine, setCurrentLine] = useState([]);
+  const [activeWordIndex, setActiveWordIndex] = useState(0);
   useEffect(() => {
     if (!playingTrack) return;
     axios
@@ -36,6 +39,12 @@ export default function Dashboard({ code }) {
         console.log(err);
       });
   }, [playingTrack]);
+
+  useEffect(() => {
+    if (playstate == false) {
+      setLyrics([]);
+    }
+  }, [playstate]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -118,6 +127,24 @@ export default function Dashboard({ code }) {
     return () => (cancel = true);
   }, [search, accessToken]);
 
+  useEffect(() => {
+    setCurrentLine(lyrics[currentLyricIndex]?.lyrics.split(" "));
+  }, [currentLyricIndex]);
+
+  function processInput(value) {
+    if (value.endsWith(" ")) {
+      setActiveWordIndex((index) => index + 1);
+      setUserInput("");
+    } else {
+      setUserInput(value);
+    }
+  }
+
+  useEffect(() => {
+    setActiveWordIndex(0);
+    setUserInput("");
+  }, [currentLyricIndex]);
+
   return (
     <>
       <div className="lg: mx-40 sm:mx-10 md:mx-20">
@@ -149,11 +176,25 @@ export default function Dashboard({ code }) {
                 chooseTrack={chooseTrack}
               />
             ))}
-            {playingTrack && (
+            {playstate && (
               <div className="lg:p-40 text-light text-4xl text-center font-roboto">
-                {lyrics[currentLyricIndex]?.lyrics}
+                {lyrics?.length === 0 && "No lyrics found"}
+                <p>
+                  {currentLine &&
+                    currentLine.map((word, index) => {
+                      if (index === activeWordIndex) {
+                        return <span className="text-green-400">{word} </span>;
+                      }
+                      return <span>{word} </span>;
+                    })}
+                </p>
                 <br></br>
-                {playstate}
+                <input
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => processInput(e.target.value)}
+                />
+                <p>{userInput}</p>
               </div>
             )}
           </div>
