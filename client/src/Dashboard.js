@@ -193,11 +193,11 @@ export default function Dashboard({ code }) {
       <div className="lg: mx-40 sm:mx-10 md:mx-20">
         <center>
           {playstate ? (
-            <h1 className="text-md text-light mb-5 font-poppins">
-              Now Playing - {title}
+            <h1 className="text-xs text-light mb-5 font-poppins">
+              ၊၊||၊ {title}
             </h1>
           ) : (
-            <h1 className="text-md text-light mb-5 font-poppins">Press Play</h1>
+            <h1 className="text-md text-light mb-5 font-poppins">Press ▷</h1>
           )}
         </center>
         <div className="m-0 p-0">
@@ -220,11 +220,10 @@ export default function Dashboard({ code }) {
               />
             ))}
             {playstate && (
-              <div className="lg:pt-40 md:pt-40 text-light text-4xl text-center font-roboto">
-                {lyrics?.length === 0 && "No lyrics found"}
-                <p>
+              <>
+                <div>
                   {correctWordArray && currentLine && (
-                    <div className="text-light text-2xl font-roboto">
+                    <div className="text-light text-2xl font-roboto mb-0">
                       <Wpm
                         correctWordArray={correctWordArray}
                         progressMs={progressMs}
@@ -232,27 +231,32 @@ export default function Dashboard({ code }) {
                       />
                     </div>
                   )}
-                  {currentLine &&
-                    currentLine.map((word, index) => {
-                      return (
-                        <Word
-                          text={word}
-                          active={index === activeWordIndex}
-                          correct={correctWordArray[index]}
-                          timestamp={lyrics[currentLyricIndex]?.seconds}
-                        />
-                      );
-                    })}
-                </p>
-                <br></br>
-                <input
-                  className="content-center bg-dark text-light placeholder-silver rounded-md focus:outline-none text-sm lg:pt-20 md:pt-10 px-2 py-2 w-1/2 text-center"
-                  type="text"
-                  value={userInput}
-                  placeholder="Type Here"
-                  onChange={(e) => processInput(e.target.value)}
-                />
-              </div>
+                </div>
+                <div className="lg:pt-40 md:pt-40 text-light text-4xl text-center font-roboto">
+                  {lyrics?.length === 0 && "No lyrics found"}
+                  <p>
+                    {currentLine &&
+                      currentLine.map((word, index) => {
+                        return (
+                          <Word
+                            text={word}
+                            active={index === activeWordIndex}
+                            correct={correctWordArray[index]}
+                            timestamp={lyrics[currentLyricIndex]?.seconds}
+                          />
+                        );
+                      })}
+                  </p>
+                  <br></br>
+                  <input
+                    className="content-center bg-dark text-light placeholder-silver rounded-md focus:outline-none text-sm lg:pt-20 md:pt-10 px-2 py-2 w-1/2 text-center"
+                    type="text"
+                    value={userInput}
+                    placeholder="Type Here"
+                    onChange={(e) => processInput(e.target.value)}
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>

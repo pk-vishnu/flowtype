@@ -48,8 +48,14 @@ export default function Wpm(props) {
 
   return (
     <>
-      <h1>{Math.round(averageWPM)} WPM</h1>
-      <h1>{Math.round(averageAccuracy)}%</h1>
+      <div className="flex justify-between">
+        <div className="flex-1 text-5xl text-gray-500">
+          <h1>{Math.round(averageWPM)} WPM</h1>
+        </div>
+        <div className="flex-1 text-3xl text-end text-gray-500">
+          <h1>{Math.round(averageAccuracy)}% Accuracy</h1>
+        </div>
+      </div>
     </>
   );
 }
