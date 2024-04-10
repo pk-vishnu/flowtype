@@ -6,6 +6,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import "./index.css";
 import axios from "axios";
 import useAuth from "./useAuth";
+import Wpm from "./Wpm";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "d58f21118f8a4feba43aa28970a5ab11",
@@ -25,7 +26,7 @@ export default function Dashboard({ code }) {
   const [currentLine, setCurrentLine] = useState([]);
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [correctWordArray, setCorrectWordArray] = useState([]);
-
+  const [previousResult, setPreviousResult] = useState([0, 0]);
   //Set Access Token
   useEffect(() => {
     if (!accessToken) return;
@@ -82,7 +83,7 @@ export default function Dashboard({ code }) {
         .catch((error) => {
           console.log(error);
         });
-    }, 200);
+    }, 500);
 
     return () => clearInterval(intervalId);
   }, [accessToken]);
@@ -163,17 +164,13 @@ export default function Dashboard({ code }) {
     setUserInput("");
   }, [currentLyricIndex]);
 
-  useEffect(() => {
-    console.log(correctWordArray);
-  }, [correctWordArray]);
-
   function Word(props) {
     const { text, active, correct } = props;
 
     if (correct === true) {
       return <span className="text-green-400">{text + " "}</span>;
     } else if (correct === false) {
-      return <span className="text-red-500">{text + " "}</span>;
+      return <span className="text-slate-600">{text + " "}</span>;
     } else if (active === true) {
       return (
         <span className="text-light bg-slate-700 rounded-md">{text + " "}</span>
@@ -226,6 +223,15 @@ export default function Dashboard({ code }) {
               <div className="lg:pt-40 md:pt-40 text-light text-4xl text-center font-roboto">
                 {lyrics?.length === 0 && "No lyrics found"}
                 <p>
+                  {correctWordArray && currentLine && (
+                    <div className="text-light text-2xl font-roboto">
+                      <Wpm
+                        correctWordArray={correctWordArray}
+                        progressMs={progressMs}
+                        timestamp={lyrics[currentLyricIndex]?.seconds}
+                      />
+                    </div>
+                  )}
                   {currentLine &&
                     currentLine.map((word, index) => {
                       return (
@@ -233,6 +239,7 @@ export default function Dashboard({ code }) {
                           text={word}
                           active={index === activeWordIndex}
                           correct={correctWordArray[index]}
+                          timestamp={lyrics[currentLyricIndex]?.seconds}
                         />
                       );
                     })}
