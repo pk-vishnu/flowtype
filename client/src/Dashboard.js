@@ -39,7 +39,7 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!playingTrack) return;
     axios
-      .get("http://localhost:3001/lyrics", {
+      .get("https://flowtype-server.vercel.app/lyrics", {
         params: {
           track: playingTrack.title,
           artist: playingTrack.artist,

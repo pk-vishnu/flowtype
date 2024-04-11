@@ -20,7 +20,7 @@ export default function Login() {
     response_type: "code",
     client_id: "d58f21118f8a4feba43aa28970a5ab11",
     scope: scope,
-    redirect_uri: "http://localhost:3000/",
+    redirect_uri: "https://flowtype.vercel.app/",
   });
 
   const queryString = params.toString();
