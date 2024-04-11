@@ -20,7 +20,9 @@ export default function Wpm(props) {
       const words = correctWordArray.filter((item) => item === true).length;
       const minutes = (elapsedTime - timestamp) / 60;
       const wpm = Math.abs(words / minutes);
-      setWpm((array) => [...array, wpm.toFixed(2)]);
+      if (wpm < 200) {
+        setWpm((array) => [...array, wpm.toFixed(2)]);
+      }
     }
   }, [correctWordArray]);
 
@@ -53,7 +55,7 @@ export default function Wpm(props) {
   useEffect(() => {
     resultCallback(previousResult);
   }, [previousResult]);
-  console.log(wpm);
+
   return (
     <>
       <div className="flex justify-between">

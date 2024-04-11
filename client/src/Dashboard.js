@@ -27,6 +27,8 @@ export default function Dashboard({ code }) {
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [correctWordArray, setCorrectWordArray] = useState([]);
   const [previousResult, setPreviousResult] = useState([0, 0]);
+  const [displayName, setDisplayName] = useState("");
+
   //Set Access Token
   useEffect(() => {
     if (!accessToken) return;
@@ -87,6 +89,27 @@ export default function Dashboard({ code }) {
 
     return () => clearInterval(intervalId);
   }, [accessToken]);
+
+  useEffect(() => {
+    const fetchDisplayName = async () => {
+      try {
+        const response = await fetch("https://api.spotify.com/v1/me/", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch data from Spotify API");
+        }
+        const data = await response.json();
+        setDisplayName(data.display_name);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchDisplayName();
+  }, []);
 
   //Current Lyric Line Handling
   useEffect(() => {
@@ -194,14 +217,16 @@ export default function Dashboard({ code }) {
   }
   return (
     <>
-      <div className="lg: mx-40 sm:mx-10 md:mx-20">
+      <div className="lg:mx-34 sm:mx-10 md:mx-20 mt-8">
         <center>
           {playstate ? (
-            <h1 className="text-xs text-light mb-5 font-poppins">
+            <h1 className="text-md text-light mb-5 font-poppins">
               ၊၊||၊ {title}
             </h1>
           ) : (
-            <h1 className="text-md text-light mb-5 font-poppins">Press ▷</h1>
+            <h1 className="text-md text-light mb-5 font-poppins">
+              Hello! {displayName} | Press ▷
+            </h1>
           )}
         </center>
         <div className="m-0 p-0">
@@ -224,7 +249,7 @@ export default function Dashboard({ code }) {
                 <div className="previousResult">
                   <div class="container mx-auto flex px-5 py-20 items-center justify-center flex-col">
                     <div className="rounded-lg overflow-hidden shadow-lg p-8">
-                      <p className="mb-8 leading-relaxed sm:text-2xl text-4xl font-roboto text-light">
+                      <p className="mb-8 leading-relaxed sm:text-2xl text-4xl font-poppins text-light">
                         You just typed {playingTrack.artist} -{" "}
                         {playingTrack.title}
                       </p>

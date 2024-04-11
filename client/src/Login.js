@@ -27,23 +27,39 @@ export default function Login() {
   const url = "https://accounts.spotify.com/authorize?" + queryString;
 
   return (
-    <div className="flex flex-col justify-start items-center h-screen mt-52">
-      <a href={url} className="text-light">
-        <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded focus:outline-none text-poppins">
-          <div className="flex items-center justify-center">
-            <svg
-              width="24"
-              height="24"
-              xmlns="http://www.w3.org/2000/svg"
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-            >
-              <path d="M19.098 10.638c-3.868-2.297-10.248-2.508-13.941-1.387-.593.18-1.22-.155-1.399-.748-.18-.593.154-1.22.748-1.4 4.239-1.287 11.285-1.038 15.738 1.605.533.317.708 1.005.392 1.538-.316.533-1.005.709-1.538.392zm-.126 3.403c-.272.44-.847.578-1.287.308-3.225-1.982-8.142-2.557-11.958-1.399-.494.15-1.017-.129-1.167-.623-.149-.495.13-1.016.624-1.167 4.358-1.322 9.776-.682 13.48 1.595.44.27.578.847.308 1.286zm-1.469 3.267c-.215.354-.676.465-1.028.249-2.818-1.722-6.365-2.111-10.542-1.157-.402.092-.803-.16-.895-.562-.092-.403.159-.804.562-.896 4.571-1.045 8.492-.595 11.655 1.338.353.215.464.676.248 1.028zm-5.503-17.308c-6.627 0-12 5.373-12 12 0 6.628 5.373 12 12 12 6.628 0 12-5.372 12-12 0-6.627-5.372-12-12-12z" />
-            </svg>
-            Login with Spotify
+    <>
+      <div className="lg: mx-40">
+        <div class="container mx-auto flex px-5 py-4 md:flex-row flex-col items-center">
+          <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+            <h1 class="title-font sm:text-6xl text-3xl mb-4 font-medium text-light font-poppins">
+              Flowtype
+              <br class="hidden lg:inline-block" />
+            </h1>
+            <p class="mb-8 leading-relaxed text-light font-poppins text-xl">
+              A minimalistic Lyrics Typing Test synced to music with SpotifyAPI
+              integration
+            </p>
+
+            <p className="text-light font-poppins text-xs mb-10">
+              *Requires Spotify Premium
+            </p>
+            <div class="flex justify-center">
+              <a href={url}>
+                <button class="inline-flex text-black bg-green-400 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg font-roboto">
+                  Play
+                </button>
+              </a>
+            </div>
           </div>
-        </button>
-      </a>
-    </div>
+          <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
+            <img
+              class="object-cover object-center rounded"
+              alt="hero"
+              src="ft_hero.png"
+            />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
