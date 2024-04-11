@@ -104,6 +104,7 @@ export default function Dashboard({ code }) {
     setPlayingTrack(track);
     setTitle(track.title);
     setSearch("");
+    setPreviousResult([0, 0]);
   }
 
   //Search Track Handling
@@ -188,6 +189,9 @@ export default function Dashboard({ code }) {
     setUserInput("");
   }, [currentLyricIndex]);
 
+  function handleResultCallback(data) {
+    setPreviousResult(data);
+  }
   return (
     <>
       <div className="lg: mx-40 sm:mx-10 md:mx-20">
@@ -202,14 +206,48 @@ export default function Dashboard({ code }) {
         </center>
         <div className="m-0 p-0">
           {!playstate && (
-            <input
-              type="search"
-              className="w-full bg-dark text-light placeholder-silver border border-green-400 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
-              placeholder="Search Songs/Artists"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <>
+              <input
+                type="search"
+                className="w-full bg-dark text-light placeholder-silver border border-green-400 rounded-md py-2 px-4 focus:outline-none focus:border-green-300"
+                placeholder="Search Songs/Artists"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </>
           )}
+          {!playstate &&
+            previousResult[0] !== 0 &&
+            previousResult[1] !== 0 &&
+            searchResults.length === 0 && (
+              <>
+                <div className="previousResult">
+                  <div class="container mx-auto flex px-5 py-20 items-center justify-center flex-col">
+                    <div className="rounded-lg overflow-hidden shadow-lg p-8">
+                      <p className="mb-8 leading-relaxed sm:text-2xl text-4xl font-roboto text-light">
+                        You just typed {playingTrack.artist} -{" "}
+                        {playingTrack.title}
+                      </p>
+                      <div className="flex items-center justify-center">
+                        <img
+                          src={playingTrack.albumUrl}
+                          className="h-32 w-32 mr-4 rounded-md"
+                          alt="Track Album"
+                        />
+                        <div>
+                          <h1 className="title-font sm:text-4xl text-xl mb-2 text-light font-roboto">
+                            {previousResult[0]} WPM
+                          </h1>
+                          <h1 className="title-font sm:text-4xl text-xl mb-4 text-light font-roboto">
+                            {previousResult[1]}% Accuracy
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
 
           <div className="overflow-y-auto max-h-[400px]">
             {searchResults.map((track) => (
@@ -219,46 +257,47 @@ export default function Dashboard({ code }) {
                 chooseTrack={chooseTrack}
               />
             ))}
-            {playstate && (
-              <>
-                <div>
-                  {correctWordArray && currentLine && (
-                    <div className="text-light text-2xl font-roboto mb-0">
-                      <Wpm
-                        correctWordArray={correctWordArray}
-                        progressMs={progressMs}
-                        timestamp={lyrics[currentLyricIndex]?.seconds}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="lg:pt-40 md:pt-40 text-light text-4xl text-center font-roboto">
-                  {lyrics?.length === 0 && "No lyrics found"}
-                  <p>
-                    {currentLine &&
-                      currentLine.map((word, index) => {
-                        return (
-                          <Word
-                            text={word}
-                            active={index === activeWordIndex}
-                            correct={correctWordArray[index]}
-                            timestamp={lyrics[currentLyricIndex]?.seconds}
-                          />
-                        );
-                      })}
-                  </p>
-                  <br></br>
-                  <input
-                    className="content-center bg-dark text-light placeholder-silver rounded-md focus:outline-none text-sm lg:pt-20 md:pt-10 px-2 py-2 w-1/2 text-center"
-                    type="text"
-                    value={userInput}
-                    placeholder="Type Here"
-                    onChange={(e) => processInput(e.target.value)}
-                  />
-                </div>
-              </>
-            )}
           </div>
+          {playstate && (
+            <>
+              <div>
+                {correctWordArray && currentLine && (
+                  <div className="text-light text-2xl font-roboto mb-0">
+                    <Wpm
+                      correctWordArray={correctWordArray}
+                      progressMs={progressMs}
+                      timestamp={lyrics[currentLyricIndex]?.seconds}
+                      resultCallback={handleResultCallback}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="lg:pt-40 md:pt-40 text-light text-4xl text-center font-roboto">
+                {lyrics?.length === 0 && "No lyrics found"}
+                <p>
+                  {currentLine &&
+                    currentLine.map((word, index) => {
+                      return (
+                        <Word
+                          text={word}
+                          active={index === activeWordIndex}
+                          correct={correctWordArray[index]}
+                          timestamp={lyrics[currentLyricIndex]?.seconds}
+                        />
+                      );
+                    })}
+                </p>
+                <br></br>
+                <input
+                  className="content-center bg-dark text-light placeholder-silver rounded-md focus:outline-none text-sm lg:pt-20 md:pt-10 px-2 py-2 w-1/2 text-center"
+                  type="text"
+                  value={userInput}
+                  placeholder="Type Here"
+                  onChange={(e) => processInput(e.target.value)}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className="absolute bottom-0 w-full bg-gray-300 py-0 text-center">

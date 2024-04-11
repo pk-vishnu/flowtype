@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 
 export default function Wpm(props) {
-  const { correctWordArray, progressMs, timestamp } = props;
+  const { correctWordArray, progressMs, timestamp, resultCallback } = props;
   const [wpm, setWpm] = useState([]);
   const [accuracy, setAccuracy] = useState([]);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [averageWPM, setAverageWPM] = useState(0);
   const [averageAccuracy, setAverageAccuracy] = useState(0);
+  const [previousResult, setPreviousResult] = useState([0, 0]);
+
   useEffect(() => {
     if (correctWordArray.length > 0) {
       setElapsedTime(progressMs / 1000);
@@ -27,6 +29,7 @@ export default function Wpm(props) {
       const sum = wpm.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
       const average = sum / wpm.length;
       setAverageWPM(average.toFixed(2));
+      setPreviousResult([Math.round(average), Math.round(averageAccuracy)]);
     }
   }, [wpm]);
 
@@ -43,9 +46,14 @@ export default function Wpm(props) {
       const sum = accuracy.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
       const average = sum / accuracy.length;
       setAverageAccuracy(average);
+      resultCallback(average);
     }
   }, [accuracy]);
 
+  useEffect(() => {
+    resultCallback(previousResult);
+  }, [previousResult]);
+  console.log(wpm);
   return (
     <>
       <div className="flex justify-between">
