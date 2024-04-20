@@ -18,9 +18,9 @@ export default function Login() {
     "user-read-private user-read-email streaming user-read-playback-state";
   const params = new URLSearchParams({
     response_type: "code",
-    client_id: "d58f21118f8a4feba43aa28970a5ab11",
+    client_id: "898966cafcef425a9db3a62487c3579b",
     scope: scope,
-    redirect_uri: "https://flowtype.vercel.app/",
+    redirect_uri: "http://localhost:3000/",
   });
 
   const queryString = params.toString();

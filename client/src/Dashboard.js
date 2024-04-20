@@ -9,7 +9,7 @@ import useAuth from "./useAuth";
 import Wpm from "./Wpm";
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: "d58f21118f8a4feba43aa28970a5ab11",
+  clientId: "898966cafcef425a9db3a62487c3579b",
 });
 
 export default function Dashboard({ code }) {
@@ -39,7 +39,7 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!playingTrack) return;
     axios
-      .get("https://flowtype-server.vercel.app/lyrics", {
+      .get("http://localhost:3001/lyrics", {
         params: {
           track: playingTrack.title,
           artist: playingTrack.artist,

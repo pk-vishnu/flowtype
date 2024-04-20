@@ -8,7 +8,7 @@ export default function useAuth(code) {
   var state = sessionStorage.getItem("state");
   useEffect(() => {
     axios
-      .post("https://flowtype-server.vercel.app/login", {
+      .post("http://localhost:3001/login", {
         code,
         state,
       })
@@ -30,7 +30,7 @@ export default function useAuth(code) {
     if (!refreshToken || !expiresIn) return;
     const interval = setInterval(() => {
       axios
-        .post("https://flowtype-server.vercel.app/refresh", {
+        .post("http://localhost:3001/refresh", {
           refreshToken,
         })
         .then((res) => {
