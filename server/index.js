@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const querystring = require("querystring");
 const axios = require("axios");
+const https = require("https");
 const app = express();
 
 app.use(bodyParser.json());
@@ -87,9 +88,11 @@ app.get("/lyrics", async (req, res) => {
   var track = req.query.track;
   var artist = req.query.artist;
   const apiUrl = `https://api.textyl.co/api/lyrics?q=${artist}%20${track}`;
-
+  const agent = new https.Agent({  
+    rejectUnauthorized: false
+  });
   try {
-    const response = await axios.get(apiUrl);
+    const response = await axios.get(apiUrl, { httpsAgent: agent });
     console.log(track);
     console.log(artist);
     const data = response.data;
@@ -99,7 +102,6 @@ app.get("/lyrics", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+app.listen(3001);
+console.log("Server listening on port 3001");
